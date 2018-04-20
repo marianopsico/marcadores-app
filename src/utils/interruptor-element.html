@@ -1,0 +1,87 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="interruptor-element">
+    <template>
+        <style>
+            :host {
+                display: inline-block;
+                user-select: none;
+                -webkit-user-select: none;
+                cursor: pointer;
+            }
+            div {
+                display: inline-block;
+                padding: 10px;
+                border-radius: 5px;
+                width: 100px;
+                text-align: center;
+            }
+            .activo {
+                background-color: orangered;
+                color: white;
+            }
+            .inactivo {
+                background-color: #DDD;
+            }
+
+        </style>
+
+<!-- se utilizan los slot para que se vea lo que pongo dentro del componente -->
+    <div class$=[[activoClass]]>
+        <slot></slot>
+    </div>
+
+    </template>
+
+    <script>
+
+        class InterruptorElement extends Polymer.Element {
+
+            static get is() {
+                return 'interruptor-element';
+            }
+
+
+            static get properties() {
+                return {
+                    activo: {
+                        type: Boolean,
+                        value: false
+                    },
+                    disabled: {
+                        type: Boolean,
+                        value: false
+                    },
+                    activoClass: {
+                        type: String,
+                        computed: 'cambiarClass(activo, disabled)'
+                    }
+                }
+            };
+
+            cambiarClass(activo, disabled) {
+                if(disabled){
+                    return 'inactivo';
+                }
+                if(activo) {
+                    return 'activo';
+                }
+                return 'inactivo';
+
+            };
+
+            ready() {
+                super.ready();
+                //lo que ejecuto aqui lo hace desde que el componente se genera
+                // muchas veces no tenemos etiquetas para poder declarar manejadores de eventos
+                //entonces lo hacemos aqui.
+                this.addEventListener('click', () => {
+                    this.activo = !this.activo;
+                });
+            }
+
+        }
+
+        window.customElements.define(InterruptorElement.is, InterruptorElement);
+    </script>
+</dom-module>
