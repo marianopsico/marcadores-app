@@ -1,4 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 
 <dom-module id="contador-element">
     <template>
@@ -6,10 +8,20 @@
             :host {
                 display: block
             }
+            paper-button {
+                --paper-button-ink-color: orangered;
+                outline: none;
+                background-color: teal;
+                color: white;
+            }
         </style>
 
-       <button on-click="incrementar">Click!</button>
+       <paper-button on-click="incrementar" raised>Click!</paper-button>
        <p>Has hecho [[contador]] clicks</p>
+
+        <a href="/">
+        <paper-icon-button icon="my-icons:arrow-back"></paper-icon-button>
+        </a>
 
     </template>
 
