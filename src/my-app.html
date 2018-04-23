@@ -22,6 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="my-icons.html">
 <link rel="import" href="./interfaz/app-logo.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 
 <link rel="lazy-import" href="my-home.html">
 <link rel="lazy-import" href="./marcadores/marcador-nuevo.html">
@@ -46,6 +47,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --divider-color:            rgb(236, 236, 236);
 
         --app-primary-color: var(--dark-primary-color);
+        --primary-color: var(--default-primary-color);
         --app-secondary-color: var(--accent-color);
 
         display: block;
@@ -102,6 +104,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app-toolbar {
          --app-toolbar-font-size: 16px;
       }
+
+      #toasterror {
+        --paper-toast-background-color: #a33;
+      }
+
       @media(min-width: 640px) {
         #logoHeader {
           display: none;
@@ -174,6 +181,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
+
+
+  <paper-toast id="toast"></paper-toast>
+  <paper-toast id="toasterror"></paper-toast>
+
   </template>
 
   <script>
@@ -205,6 +217,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         ];
       }
 
+      ready() {
+        super.ready();
+        this.addEventListener('navegar', (e) => {
+          this.set('route.path', e.detail.ruta)
+        });
+        this.addEventListener('toast-error', (e) =>
+          this.toastError(e));
+        this.addEventListener('toast-message', (e) =>
+          this.toastMessage(e));
+      }
+
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'home' in that case.
@@ -234,7 +257,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _showPage404() {
         this.page = 'view404';
       }
+
+      toastMessage(e){
+        this.$.toast.show({text: e.detail, duration: 3000});
+      }
+
+      toastError(e){
+        this.$.toasterror.show({text: e.detail, duration: 3000});
+      }
     }
+
+
 
     window.customElements.define(MyApp.is, MyApp);
   </script>

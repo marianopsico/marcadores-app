@@ -1,4 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link href="../../bower_components/paper-input/paper-textarea.html" rel="import">
+<link href="../../bower_components/paper-input/paper-input.html" rel="import">
+<link href="../../bower_components/paper-button/paper-button.html" rel="import">
+<link href="../../bower_components/iron-ajax/iron-ajax.html" rel="import">
+<link href="../../bower_components/paper-spinner/paper-spinner.html" rel="import">
 
 <dom-module id="marcador-nuevo">
     <template>
@@ -6,9 +11,43 @@
             :host {
                 display: block
             }
+
+            paper-button.baccion {
+                --paper-button: {
+                    background-color: var(--app-primary-color);
+                    color: #FFF;
+                }
+            }
+
+            paper-spinner {
+                position: relative;
+                top: 8px;
+                --paper-spinner-stroke-width: 5px;
+            }
+
         </style>
+
+    <iron-ajax
+        id="elInsertAjax"
+        url="http://localhost:3333/marcadores"
+        handle-as="json"
+        method="post"
+        content-type="application/json"
+        on-response="insertResponse"
+        on-error="insertError"
+        loading="{{loading}}"
+    ></iron-ajax>
+
     <div class="card">
-        <h2>Nuevo Marcador</h2>
+        <h2>Nuevo marcador</h2>
+
+      <paper-input label="Url" value="{{enlace.url}}"></paper-input>
+      <paper-input label="Título" value="{{enlace.titulo}}"></paper-input>
+      <paper-textarea label="Descripción" value="{{enlace.descripcion}}"></paper-textarea>
+      <div class="send">
+        <paper-button class="baccion" on-click="anadir" disabled="[[loading]]">Añadir</paper-button>
+        <paper-spinner active="[[loading]]"></paper-spinner>
+      </div>
     </div>
 
     </template>
@@ -24,7 +63,20 @@
 
             static get properties() {
                 return {
-
+                   enlace: {
+                        type: Object,
+                        value: function() {
+                            return {
+                            url:'http://',
+                            titulo: '',
+                            descripcion: ''
+                            }
+                        }
+                    },
+                    loading: {
+                        type: Boolean,
+                        value: false
+                    }
                 };
             }
 
@@ -36,10 +88,37 @@
 
             ready() {
                 super.ready();
+            }
 
-                Polymer.RenderStatus.afterNextRender(this, function() {
+            anadir() {
+                // this.loading = true;
+                console.log('vamos a añadir el marcador a la base de datos', this.enlace);
+                this.$.elInsertAjax.body = this.enlace;
+                this.$.elInsertAjax.generateRequest();
+            }
 
-                });
+            insertResponse (e) {
+                this.dispatchEvent(new CustomEvent('toast-message', {
+                    bubbles: true,
+                    composed: true,
+                    detail: 'Marcador Insertado'
+                }));
+                console.log('insertado...', e.detail.succeeded);
+            }
+
+            insertError (e) {
+                let msg;;
+                if(e.detail.request.status == 404) {
+                    msg = 'Recurso no encontrado';
+                } else {
+                    msg = 'Error al insertar'
+                }
+                this.dispatchEvent(new CustomEvent('toast-error', {
+                    bubbles: true,
+                    composed: true,
+                    detail: msg
+                }));
+                 console.log(msg, e.detail.request);
             }
 
         }
