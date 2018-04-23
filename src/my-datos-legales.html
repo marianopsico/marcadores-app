@@ -13,7 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="./utils/timestamp-to-date.html">
 <link rel="import" href="./utils/interruptor-element.html">
 
-<dom-module id="my-view3">
+<dom-module id="my-datos-legales">
   <template>
     <style include="shared-styles">
       :host {
@@ -26,21 +26,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <div class="card">
-      <div class="circle">3</div>
-      <h1 on-click="cambiar">Mariano<h1>
-      <timestamp-to-date timestamp="10"></timestamp-to-date>
-      <timestamp-to-date timestamp="1524178417939"></timestamp-to-date>
-      <timestamp-to-date id="t3"></timestamp-to-date>
-
-<!-- se utilizan los slot para que se vea lo que pongo dentro del componente -->
-      <interruptor-element activo>Activo?</interruptor-element>
-      <interruptor-element activo disabled>Activo?</interruptor-element>
+      <h2>Datos Legales</h2>
+      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores incidunt officia ad ut veritatis aliquam fugit suscipit nemo maiores minima, porro quas commodi rem sunt nesciunt atque laborum nam deleniti?</p>
+      <p>Aspernatur fugit tempore nobis, quisquam est et dicta veniam nulla sunt quaerat, aperiam voluptatem consectetur ipsa a atque provident necessitatibus, ut vero. Facilis dicta cupiditate eveniet inventore culpa magnam corporis.</p>
+      <p>Qui commodi nisi cumque libero, esse tenetur est exercitationem consequatur minima animi quidem provident, rem vero veritatis laborum a non, eum odio. Fugit officiis iure doloribus doloremque provident, voluptatibus incidunt.</p>
+      <p>Sit, sunt. Nisi omnis, veniam assumenda unde accusamus illum, cumque, nesciunt molestias ad id dolorem velit cum. Vitae commodi, debitis amet, ad nesciunt obcaecati ipsum ratione quod modi aliquam nobis?</p>
     </div>
   </template>
 
   <script>
-    class MyView3 extends Polymer.Element {
-      static get is() { return 'my-view3'; }
+    class MyDatosLegales extends Polymer.Element {
+      static get is() { return 'my-datos-legales'; }
 
       cambiar() {
       //con el signo dolar puedo acceder a cualquier
@@ -54,6 +50,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-    window.customElements.define(MyView3.is, MyView3);
+    window.customElements.define(MyDatosLegales.is, MyDatosLegales);
   </script>
 </dom-module>

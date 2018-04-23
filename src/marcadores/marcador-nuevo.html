@@ -1,0 +1,49 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="marcador-nuevo">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block
+            }
+        </style>
+    <div class="card">
+        <h2>Nuevo Marcador</h2>
+    </div>
+
+    </template>
+
+    <script>
+
+        class MarcadorNuevo extends Polymer.Element {
+
+            static get is() {
+                return 'marcador-nuevo';
+            }
+
+
+            static get properties() {
+                return {
+
+                };
+            }
+
+
+            constructor() {
+                super();
+            }
+
+
+            ready() {
+                super.ready();
+
+                Polymer.RenderStatus.afterNextRender(this, function() {
+
+                });
+            }
+
+        }
+
+        window.customElements.define(MarcadorNuevo.is, MarcadorNuevo);
+    </script>
+</dom-module>
