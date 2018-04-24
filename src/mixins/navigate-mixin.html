@@ -1,0 +1,17 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<script>
+  /* @polymerMixin */
+  NavigateMixin = Polymer.dedupingMixin ((superclass) => {
+    return class extends superclass {
+      navigateTo(ruta) {
+        this.dispatchEvent(new CustomEvent('navegar', {
+          detail: {
+            ruta: ruta
+          },
+          bubbles: true,
+          composed: true
+        }));
+      }
+    }
+  });
+</script>

@@ -23,14 +23,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="my-icons.html">
 <link rel="import" href="./interfaz/app-logo.html">
+<link rel="import" href="./user/user-service.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="./marcadores/marcadores-service.html">
 
-<link rel="lazy-import" href="my-home.html">
-<link rel="lazy-import" href="./marcadores/marcador-nuevo.html">
-<link rel="lazy-import" href="my-contacto.html">
-<link rel="lazy-import" href="my-datos-legales.html">
-<link rel="lazy-import" href="my-view404.html">
+<link href="my-home.html" rel="lazy-import">
+<link href="marcadores/marcador-nuevo.html" rel="lazy-import">
+<link href="my-contacto.html" rel="lazy-import">
+<link href="my-datos-legales.html" rel="lazy-import">
+<link href="my-login.html" rel="lazy-import">
+<link href="my-register.html" rel="lazy-import">
+<link href="my-view404.html" rel="lazy-import">
 
 <dom-module id="my-app">
   <template>
@@ -111,6 +114,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-toast-background-color: #a33;
       }
 
+      #loginlink {
+        color: var(--text-primary-color);
+      }
+
       @media(min-width: 640px) {
         #logoHeader {
           display: none;
@@ -135,6 +142,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     trayendo desde otro componente -->
     <marcadores-service marcadores="{{marcadores}}" loading="{{marcadoresLoading}}">
     </marcadores-service>
+    <user-service id="userService"></user-service>
 
     <app-drawer-layout fullbleed narrow="{{narrow}}">
       <!-- Drawer content -->
@@ -172,7 +180,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <div main-title class='logoContainer'>
                 <app-logo id="logoHeader"></app-logo>
               </div>
-              <paper-icon-button icon="my-icons:account-circle"></paper-icon-button>
+              <a href="/login" id="loginlink">
+                <paper-icon-button icon="my-icons:account-circle"></paper-icon-button>
+              </a>
           </app-toolbar>
         </app-header>
 
@@ -185,6 +195,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <marcador-nuevo name="nuevo"></marcador-nuevo>
           <my-contacto name="contacto"></my-contacto>
           <my-datos-legales name="datos-legales"></my-datos-legales>
+          <my-login name="login"></my-login>
+          <my-register name="register"></my-register>
           <my-view404 name="view404"></my-view404>
         </iron-pages>
       </app-header-layout>
