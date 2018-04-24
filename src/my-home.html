@@ -16,6 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link href="../bower_components/paper-spinner/paper-spinner-lite.html" rel="import">
 
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="./marcadores//marcadores-item.html">
 
 <dom-module id="my-home">
   <template>
@@ -36,24 +37,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-
-    <iron-ajax
-       auto
-       url="http://localhost:3333/marcadores"
-       handle-as="json"
-       last-response="{{marcadores}}"
-       loading="{{loading}}"
-    ></iron-ajax>
-
-
     <div class="card">
       <div>
         <h1>Home</h1>
         <paper-spinner-lite class="green" active="{{loading}}"></paper-spinner-lite>
       </div>
 
-      <template is="dom-repeat" items="[[marcadores]]">
-        <p>[[item.id]]: [[item.titulo]]</p>
+      <template is="dom-repeat" items="[[marcadores]]" as="marcador">
+        <marcadores-item marcador="[[marcador]]"></marcadores-item>
       </template>
 
       <template is="dom-if" if="{{ ! marcadores.length }}">
