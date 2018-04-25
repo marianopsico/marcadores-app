@@ -79,15 +79,22 @@
       ready() {
         super.ready();
         this.marcadoresService = this.$.elmeta.byKey('marcadoresService');
+        this.marcadoresService.addEventListener('delete-error', (e) => this.deleteError(e));
       }
 
       deleteItem() {
-        this.marcadoresService.delete(this.marcador.id);
+        console.log('voy a setear deleting');
         this.classItem = 'deleting';
+        this.marcadoresService.delete(this.marcador.id);
       }
 
       marcadorChanged() {
         this.classItem = '';
+      }
+
+      deleteError() {
+        console.log('deleteError', this.marcador);
+        this.set('classItem', '');
       }
 
     }

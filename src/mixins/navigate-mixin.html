@@ -1,4 +1,10 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<!-- este mixin cunple con la finalidad de escalar eventos
+  personalizados , bubbles y compose, de un componente
+  hacia otro, cualquier componente que necesita navegar
+  lo utiliza por ejemplo: -->
+
 <script>
   /* @polymerMixin */
   NavigateMixin = Polymer.dedupingMixin ((superclass) => {
