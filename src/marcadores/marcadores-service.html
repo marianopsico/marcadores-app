@@ -32,6 +32,24 @@
       on-error="deleteError"
     ></iron-ajax>
 
+     <iron-ajax
+        id="elajaxget"
+        url="http://localhost:3333/marcadores/[[idGet]]"
+        method="get"
+        on-response="getResponse"
+        on-error="getError"
+        last-response="{{getObject}}"
+    ></iron-ajax>
+
+      <iron-ajax
+        id="elajaxput"
+        url="http://localhost:3333/marcadores/[[idPut]]"
+        content-type="application/json"
+        method="put"
+        on-response="putResponse"
+        on-error="putError"
+    ></iron-ajax>
+
 
 
 <!-- Con un solo componente un solo ID de iron-meta puedo registrar
@@ -59,7 +77,10 @@
             value: false,
             notify: true
           },
-          idDelete: Number
+          idDelete: Number,
+          idGet: Number,
+          idPut: Number,
+          getObject: Object
         }
       }
 
@@ -110,6 +131,45 @@
         this.feedbackNegativo('Error al borrar el enlace');
         this.dispatchEvent(new CustomEvent('delete-error'));
       }
+
+      get(id) {
+        this.idGet = id;
+        console.log('marcadoresService voy a recuperar', id);
+        this.$.elajaxget.generateRequest();
+      }
+      getResponse(e) {
+        let response = this.getObject;
+        console.log('marcadores sevice getresponse', response)
+        this.dispatchEvent(new CustomEvent('get-response', {
+          detail: response
+        }));
+      }
+      getError() {
+        this.feedbackNegativo('Error al recuperar un enlace');
+        this.dispatchEvent(new CustomEvent('get-error'));
+      }
+
+      put(enlace) {
+        if(this.verifyUser('elajaxput')) {
+          this.idPut = enlace.id;
+          console.log('marcadoresService voy a editar', enlace.id);
+          this.$.elajaxput.body = enlace;
+          this.$.elajaxput.generateRequest();
+        } else {
+          this.feedbackNegativo('Debes estar logueado para editar');
+          this.dispatchEvent(new CustomEvent('put-error'));
+        }
+      }
+      putResponse() {
+        this.feedbackPositivo('Enlace editado');
+        this.dispatchEvent(new CustomEvent('put-response'));
+        this.$.elajax.generateRequest();
+      }
+      putError() {
+        this.feedbackNegativo('Error al editar el enlace');
+        this.dispatchEvent(new CustomEvent('put-error'));
+      }
+
 
       getUserService() {
         console.log('en get user service');

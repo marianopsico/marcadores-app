@@ -3,10 +3,10 @@
 <link href="../../../../bower_components/paper-item/paper-item-body.html" rel="import">
 <link href="../../../../bower_components/paper-item/paper-icon-item.html" rel="import">
 <link href="../../../../bower_components/iron-icon/iron-icon.html" rel="import">
+<link href="../../../../bower_components/iron-meta/iron-meta.html" rel="import">
 
-<link rel="import" href="../../../../bower_components/iron-meta/iron-meta.html">
-<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
-
+<link href="./marcadores-item-options.html" rel="import">
+<link  href="../../mixins/navigate-mixin.html" rel="import">
 
 <dom-module id="marcadores-item">
   <template>
@@ -30,10 +30,6 @@
           background-color: #f99;
       }
 
-      paper-icon-button.cancelbutton {
-        color:#e66;;
-      }
-
       paper-icon-button.editbutton {
         color: rgb(84,136, 145);
       }
@@ -49,15 +45,17 @@
         <div>[[marcador.titulo]]</div>
         <div secondary>[[marcador.url]]</div>
       </paper-item-body>
-      <paper-icon-button icon="my-icons:delete" class="cancelbutton" on-click="deleteItem" id="cancel"></paper-icon-button>
-      <paper-icon-button icon="my-icons:mode-edit" class="editbutton"></paper-icon-button>
+      <marcadores-item-options
+        on-delete="deleteItem"
+        on-edit="editItem">
+      </marcadores-item-options>
     </paper-icon-item>
 
   </template>
 
   <script>
 
-    class MarcadoresItem extends Polymer.Element {
+    class MarcadoresItem extends NavigateMixin(Polymer.Element)  {
       static get is() {
         return 'marcadores-item';
       }
@@ -80,6 +78,11 @@
         super.ready();
         this.marcadoresService = this.$.elmeta.byKey('marcadoresService');
         this.marcadoresService.addEventListener('delete-error', (e) => this.deleteError(e));
+      }
+
+      editItem() {
+        this.navigateTo(`/editar/${this.marcador.id}/`);
+        // this.navigateTo('/editar/' + this.marcador.id + '/');
       }
 
       deleteItem() {

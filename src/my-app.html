@@ -30,6 +30,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link href="my-home.html" rel="lazy-import">
 <link href="marcadores/marcador-nuevo.html" rel="lazy-import">
+<link href="marcadores/marcadores-editar.html" rel="lazy-import">
 <link href="my-contacto.html" rel="lazy-import">
 <link href="my-datos-legales.html" rel="lazy-import">
 <link href="my-login.html" rel="lazy-import">
@@ -140,6 +141,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         url-space-regex="^[[rootPath]]">
     </app-location>
 
+<!-- //por tail podemos pasar todos los parametros que aqui
+      no se representan-->
     <app-route
         route="{{route}}"
         pattern="[[rootPath]]:page"
@@ -208,6 +211,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             role="main">
           <my-home name="home" marcadores="[[marcadores]]" loading="{{marcadoresLoading}}"></my-home>
           <marcador-nuevo name="nuevo"></marcador-nuevo>
+          <marcadores-editar name="editar" route="[[subroute]]"></marcadores-editar>
           <my-contacto name="contacto"></my-contacto>
           <my-datos-legales name="datos-legales"></my-datos-legales>
           <my-login name="login" logged-in="{{loggedIn}}"></my-login>
@@ -278,11 +282,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
         var resolvedPageUrl;
-        if(page == 'nuevo'){
-          resolvedPageUrl = this.resolveUrl('marcadores/marcador-nuevo.html');
-        } else {
-          resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+        switch(page) {
+          case 'nuevo':
+            resolvedPageUrl = this.resolveUrl('marcadores/marcador-nuevo.html');
+            break;
+          case 'editar':
+            resolvedPageUrl = this.resolveUrl('marcadores/marcadores-editar.html');
+            break;
+          default:
+            resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
         }
+        // if(page == 'nuevo'){
+        //   resolvedPageUrl = this.resolveUrl('marcadores/marcador-nuevo.html');
+        // } else {
+        //   resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+        // }
         Polymer.importHref(
             resolvedPageUrl,
             null,
