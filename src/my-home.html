@@ -16,6 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link href="../bower_components/paper-spinner/paper-spinner-lite.html" rel="import">
 
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="./share/shared-item.html">
 <link rel="import" href="./marcadores//marcadores-item.html">
 
 <dom-module id="my-home">
@@ -37,6 +38,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
+    <div class="car" id="container">
+       <h1>Marcadores Compartidos</h1>
+
+       <template is="dom-repeat" items="[[marcadoresCompartidos]]" as="marcadorCompartido">
+          <shared-item marcador="[[marcadorCompartido]]"></shared-item>
+       </template>
+
+    </div>
     <div class="card">
       <div>
         <h1>Marcadores</h1>
@@ -65,7 +74,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           loading: {
             type: Boolean,
             value: false
-          }
+          },
+          marcadoresCompartidos: Array
         }
       }
     }

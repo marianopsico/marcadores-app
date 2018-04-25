@@ -21,12 +21,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link href="../bower_components/paper-button/paper-button.html" rel="import">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 
 <link rel="import" href="my-icons.html">
 <link rel="import" href="./interfaz/app-logo.html">
 <link rel="import" href="./user/user-service.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="./marcadores/marcadores-service.html">
+<link rel="import" href="./share/share-service.html">
 
 <link href="my-home.html" rel="lazy-import">
 <link href="marcadores/marcador-nuevo.html" rel="lazy-import">
@@ -150,6 +152,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         tail="{{subroute}}">
     </app-route>
 
+    <!-- FIREBASE -->
+    <firebase-app
+      auth-domain="marcadoresapp.firebaseapp.com"
+      database-url="https://marcadoresapp.firebaseio.com"
+      api-key="AIzaSyB0bGsIw6aSUXjNjb824LxXCahr3VgX_nc"
+      storage-bucket="marcadoresapp.appspot.com"
+    ></firebase-app>
+
+    <firebase-auth id="auth" user="{{user}}" provider="google" on-error="handleError">
+    </firebase-auth>
+
+    <share-service id="shareService" marcadores-compartidos="{{marcadoresCompartidos}}"></share-service>
+
 <!-- No estamos declarando las propiedades marcadores o marcadoresLoading
       y sin embargo funciona y no lo muestra como un error, lo estamos
     trayendo desde otro componente -->
@@ -201,6 +216,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
               <paper-button hidden$=[[!loggedIn]] class="blogout" on-click="doLogout">Logout</paper-button>
 
+              <paper-button on-click="autentica">Login Firebase</paper-button>
+
           </app-toolbar>
         </app-header>
 
@@ -209,14 +226,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <my-home name="home" marcadores="[[marcadores]]" loading="{{marcadoresLoading}}"></my-home>
-          <marcador-nuevo name="nuevo"></marcador-nuevo>
-          <marcadores-editar name="editar" route="[[subroute]]"></marcadores-editar>
-          <my-contacto name="contacto"></my-contacto>
-          <my-datos-legales name="datos-legales"></my-datos-legales>
-          <my-login name="login" logged-in="{{loggedIn}}"></my-login>
-          <my-register name="register"></my-register>
-          <my-view404 name="view404"></my-view404>
+
+          <my-home
+            name="home"
+            marcadores="[[marcadores]]"
+            loading="{{marcadoresLoading}}"
+            marcadores-compartidos= "{{marcadoresCompartidos}}"
+            on-share-delete="shareDelete"
+          ></my-home>
+
+          <marcador-nuevo
+            name="nuevo">
+          </marcador-nuevo>
+
+          <marcadores-editar
+            name="editar"
+            route="[[subroute]]"
+          ></marcadores-editar>
+
+          <my-contacto
+            name="contacto">
+          </my-contacto>
+
+          <my-datos-legales
+            name="datos-legales"
+          ></my-datos-legales>
+
+          <my-login name="login"
+            logged-in="{{loggedIn}}">
+          </my-login>
+
+          <my-register
+            name="register">
+          </my-register>
+
+          <my-view404
+            name="view404">
+          </my-view404>
+
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
@@ -247,7 +294,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
-          loggedIn: Boolean
+          loggedIn: Boolean,
+          fbApp: Object
         };
       }
 
@@ -255,6 +303,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return [
           '_routePageChanged(routeData.page)',
         ];
+      }
+
+      autentica() {
+        this.$.auth.signInWithPopup()
+          .then(function(response) {})
+          .catch(function(error) {});
+      }
+
+      shareDelete(e) {
+        // console.log(e.detail);
+        this.$.shareService.delete(e.detail);
       }
 
       ready() {

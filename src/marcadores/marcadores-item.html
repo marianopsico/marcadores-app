@@ -47,8 +47,9 @@
       </paper-item-body>
       <marcadores-item-options
         on-delete="deleteItem"
-        on-edit="editItem">
-      </marcadores-item-options>
+        on-edit="editItem"
+        on-share="shareItem"
+      ></marcadores-item-options>
     </paper-icon-item>
 
   </template>
@@ -78,6 +79,7 @@
         super.ready();
         this.marcadoresService = this.$.elmeta.byKey('marcadoresService');
         this.marcadoresService.addEventListener('delete-error', (e) => this.deleteError(e));
+        this.shareService = this.$.elmeta.byKey('shareService');
       }
 
       editItem() {
@@ -98,6 +100,12 @@
       deleteError() {
         console.log('deleteError', this.marcador);
         this.set('classItem', '');
+      }
+
+  //en dataBase esta toda la api de firebase para la web
+      shareItem(){
+        //this.fbApp.database().ref('marcadoresCompartidos').push(this.marcador);
+        this.shareService.share(this.marcador);
       }
 
     }
