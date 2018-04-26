@@ -1,0 +1,89 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-messaging.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../mixins/emisor-feedback-mixin.html">
+<link rel="import" href="../utils/interruptor-element.html">
+
+<dom-module id="notification-manager">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+
+    <iron-meta id="meta"></iron-meta>
+
+    <firebase-document
+      id="notificationDocument"
+    ></firebase-document>
+
+<!-- Gestiona el token y lo expone en la propiedad token -->
+    <firebase-messaging
+      id="messaging"
+      token="{{token}}"
+      active="{{isActive}}"
+      on-message="handleMessage"
+    ></firebase-messaging>
+<!-- Con este botón pedimos el permiso -->
+    <paper-button on-click="solicitarPermiso">Activar Notificaciones</paper-button>
+  </template>
+
+  <script>
+    class NotificationManager extends EmisorFeedbackMixin(Polymer.Element) {
+      static get is() {
+        return 'notification-manager';
+      }
+
+      static get properties() {
+        return {
+          token: {
+            type: String,
+            observer: 'tokenChanged'
+          },
+          isActive: {
+            type: Boolean,
+          },
+         };
+      }
+
+      ready() {
+        super.ready();
+        this.userService = this.$.meta.byKey('userService');
+        console.log(this.userService);
+        this.userService.addEventListener('login-response', (e) => this.loginResponse(e));
+      }
+
+      loginResponse() {
+        console.log('loginresponse ejecutado')
+        this.tokenChanged(this.token);
+       }
+
+       solicitarPermiso() {
+        this.$.messaging.requestPermission()
+          .then( () => this.feedbackPositivo('Notificaciones autorizadas') )
+          .catch( () => this.feedbackNegativo('Notificaciones bloqueadas') )
+      }
+
+      tokenChanged(token) {
+         if(token) {
+         console.log(token, this.userService.loggedIn)
+         }
+        if(token && this.userService.loggedIn) {
+          console.log('almaceno el token', token);
+          let ref = `/userNotificationToken/${this.userService.getEmailFirebaseKey()}`;
+          this.$.notificationDocument.app.database().ref(ref).set(token);
+        }
+     }
+
+      handleMessage(e, data) {
+        var no = data.message.notification;
+        this.feedbackPositivo(no.title);
+      }
+    }
+
+    window.customElements.define(NotificationManager.is, NotificationManager);
+  </script>
+</dom-module>

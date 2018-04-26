@@ -4,33 +4,29 @@
     <template>
         <style>
             :host {
-                display: inline-block;
-                user-select: none;
-                -webkit-user-select: none;
-                cursor: pointer;
+                display: block;
             }
             div {
                 display: inline-block;
                 padding: 10px;
                 border-radius: 5px;
-                width: 100px;
-                text-align: center;
+                @apply --interruptor-element-box;
             }
             .activo {
-                background-color: orangered;
-                color: white;
+                background-color: var(--app-primary-color, orangered);
+                color: #fff;
             }
             .inactivo {
-                background-color: #DDD;
+                background-color:var(--interruptor-element-color-inactivo, #ddd);
             }
 
         </style>
 
 <!-- se utilizan los slot para que se vea lo que pongo dentro del componente -->
 <!-- Si no NO lo renderiza!!! -->
-    <div class$=[[activoClass]]>
-        <slot></slot>
-    </div>
+         <div class$="[[interruptorClass]]" on-click="cambia">
+             <slot name="interruptor-content"></slot>
+        </div>
 
     </template>
 
@@ -47,40 +43,26 @@
                 return {
                     activo: {
                         type: Boolean,
-                        value: false
+                        value: false,
+                        notify: true
                     },
-                    disabled: {
-                        type: Boolean,
-                        value: false
-                    },
-                    activoClass: {
+                    interruptorClass: {
                         type: String,
-                        computed: 'cambiarClass(activo, disabled)'
+                        computed: 'calculaClass(activo)'
                     }
                 }
             };
 
-            cambiarClass(activo, disabled) {
-                if(disabled){
-                    return 'inactivo';
-                }
+            calculaClass(activo) {
                 if(activo) {
-                    return 'activo';
+                return 'activo';
                 }
                 return 'inactivo';
-
-            };
-
-            ready() {
-                super.ready();
-                //lo que ejecuto aqui lo hace desde que el componente se genera
-                // muchas veces no tenemos etiquetas para poder declarar manejadores de eventos
-                //entonces lo hacemos aqui.
-                this.addEventListener('click', () => {
-                    this.activo = !this.activo;
-                });
             }
 
+            cambia() {
+                this.activo = !this.activo;
+            }
         }
 
         window.customElements.define(InterruptorElement.is, InterruptorElement);

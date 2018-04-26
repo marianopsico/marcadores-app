@@ -20,7 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link href="../bower_components/paper-button/paper-button.html" rel="import">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymerfire/polymerfire.html">
 
 <link rel="import" href="my-icons.html">
@@ -29,6 +29,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="./marcadores/marcadores-service.html">
 <link rel="import" href="./share/share-service.html">
+<link rel="import" href="../bower_components/dile-user-config-box/dile-user-config-box.html">
+<link rel="import" href="./notification/notification-manager.html">
+
 
 <link href="my-home.html" rel="lazy-import">
 <link href="marcadores/marcador-nuevo.html" rel="lazy-import">
@@ -131,6 +134,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
+      dile-user-config-box {
+        --dile-user-config-box-icon-color: var(--default-primary-color);
+        font-size: 1em;
+        --dile-user-config-box-overlay: {
+          padding: 10px;
+          color: #666;
+          width: 250px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          text-align: center;
+        }
+      }
+
       @media(min-width: 640px) {
         #logoHeader {
           display: none;
@@ -157,7 +174,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       auth-domain="marcadoresapp.firebaseapp.com"
       database-url="https://marcadoresapp.firebaseio.com"
       api-key="AIzaSyB0bGsIw6aSUXjNjb824LxXCahr3VgX_nc"
-      storage-bucket="marcadoresapp.appspot.com"
+      messaging-sender-id= '940866661647'
     ></firebase-app>
 
     <firebase-auth id="auth" user="{{user}}" provider="google" on-error="handleError">
@@ -213,11 +230,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <a href="/login" id="loginlink" hidden$="[[loggedIn]]">
                 <paper-icon-button icon="my-icons:account-circle"></paper-icon-button>
               </a>
-
-              <paper-button hidden$=[[!loggedIn]] class="blogout" on-click="doLogout">Logout</paper-button>
-
-              <paper-button on-click="autentica">Login Firebase</paper-button>
-
+              <div hidden="[[!loggedIn]]">
+                <dile-user-config-box>
+                  <span slot="overlay-content">
+                    <paper-button class="blogout" on-click="doLogout">Logout</paper-button>
+                    <notification-manager></notification-manager>
+                  </span>
+                </dile-user-config-box>
+            </div>
+            <!-- <paper-button on-click="autentica">login firebase</paper-button> -->
           </app-toolbar>
         </app-header>
 
@@ -275,6 +296,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
+
     // Gesture events like tap and track generated from touch will not be
     // preventable, allowing for better scrolling performance.
     Polymer.setPassiveTouchGestures(true);
