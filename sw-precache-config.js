@@ -12,19 +12,31 @@
 
 module.exports = {
   staticFileGlobs: [
-    'bower_components/webcomponentsjs/webcomponents-loader.js',
-    'images/*',
-    'manifest.json'
+    "bower_components/webcomponentsjs/webcomponents-loader.js",
+    "images/*",
+    "images/manifest/*",
+    "manifest.json"
   ],
   runtimeCaching: [
     {
       urlPattern: /\/bower_components\/webcomponentsjs\/.*.js/,
-      handler: 'fastest',
+      handler: "fastest",
       options: {
         cache: {
-          name: 'webcomponentsjs-polyfills-cache',
-        },
-      },
+          name: "webcomponentsjs-polyfills-cache"
+        }
+      }
     },
+    {
+      urlPattern: /fake\.desarrolloweb\.es\/marcadores/,
+      handler: "networkFirst",
+      options: {
+        cache: {
+          maxEntries: 200,
+          name: "marcadores-data"
+        }
+      }
+    }
   ],
+  navigateFallbackWhitelist: [/^(?!\/__).*/]
 };
