@@ -7,7 +7,7 @@
 
 <script>
   /* @polymerMixin */
-  NavigateMixin = Polymer.dedupingMixin ((superclass) => {
+  NavigateMixin = Polymer.dedupingMixin((superclass) => {
     return class extends superclass {
       navigateTo(ruta) {
         this.dispatchEvent(new CustomEvent('navegar', {
